@@ -1,25 +1,35 @@
+from multiprocessing.sharedctypes import Value
 from CuentaBancaria import CuentaBancaria
-
-class User: 
-
-    def __init__(self, nombre, email):
+class User():
+    
+    def __init__(self, nombre, email,cuentas):
         self.nombre = nombre
         self.email = email
-        self.cuenta = CuentaBancaria(2, 1000)
+        self.cuentas=cuentas
+        #self.cuenta = cuenta #CuentaBancaria(2, 1000)
+        
 
-    def hacer_deposito(self, monto):
-        self.balance += monto
+    def hacer_deposito(self, nombrecuenta, monto):
+        self.cuentas[nombrecuenta].deposito(monto)
         return self
 
-    def hacer_retiro(self, monto):
-        self.balance -= monto
+    def hacer_retiro(self, nombrecuenta, monto):
+        self.cuentas[nombrecuenta].retiro(monto)
         return self
 
-    def mostrar_balance_usuario(self):
-        print(f"Usuario:{self.nombre}, Balance:{self.balance}")
-        return self
+    def mostrar_cuentas_usuario(self):
+        print("########################################\n")
+        print(f"Nombre: {self.nombre}")
+        i=1
+        for key, Value in self.cuentas.items() :
+            print("------------------------------------")
+            print("|  Cuenta #"+str(i))
+            print(f"|  {key}:\n|  Balance: {Value.balance}, Tasa interés: {Value.tasa_int}")
+            print("------------------------------------")
+            i+=1
+        
 
-    def transf_dinero(self, otro_usuario, monto):
-        self.balance -= monto
-        otro_usuario.balance += monto
-        return self 
+    def transf_dinero(self, nombrecuenta, otro_usuario, nombre_cuenta_usuario, monto):
+        self.cuentas[nombrecuenta].transf_dinero(
+            otro_usuario.cuentas[nombre_cuenta_usuario], monto)
+        return self

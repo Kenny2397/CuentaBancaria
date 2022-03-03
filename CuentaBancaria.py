@@ -19,6 +19,16 @@ class CuentaBancaria:
             self.balance -= 5
         return self
     
+    def transf_dinero(self, otra_cuenta, monto):
+        if(CuentaBancaria.puede_retirar(self.balance,monto)):
+            self.balance -= monto
+            otra_cuenta.balance += monto
+        else:
+            print("Fondos insuficientes: cobrando una tarifa de $5")
+            tarifa = 5
+            self.balance -= 5
+        return self
+    
     def mostrar_info_cuenta(self):
         print(f"nombreBanco:{self.nombre_banco} , tasa:{self.tasa_int}, balance:{self.balance}")
         return self
